@@ -16,22 +16,25 @@ LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
 - Configure virtual host
 
 ```
-<VirtualHost local.crm:80>
-    ServerName local.crm
-    Redirect permanent /ws wss://local.crm/ws
+# Optional: redirects all non TLS request to secure ports
+<VirtualHost example.com:80>
+    ServerName example.com
+    Redirect permanent /ws wss://example.com/ws
 </VirtualHost>
 
-<VirtualHost local.crm:443>
-    ServerName local.crm:443
+<VirtualHost example.com:443>
+    ServerName example.com:443
     
+    # in this case, websocket server (e.g.: Ratchet) listens on localhost
+    # this setting also terminates TLS
     ProxyPass /ws ws://localhost:8989
     ProxyPassReverse /ws ws://localhost:8989
     ProxyPreserveHost On
     RequestHeader set X-Forwarded-Proto "wss"
 
     SSLEngine On
-    SSLCertificateFile "/ssl/local.crm.cert.pem"
-    SSLCertificateKeyFile "/ssl/local.crm.key.pem"
+    SSLCertificateFile "/path/to/public.cert.pem"
+    SSLCertificateKeyFile "/path/to/private.key.pem"
     <Location /ws>
         SSLRequireSSL
     </Location>

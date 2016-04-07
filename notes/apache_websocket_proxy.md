@@ -5,6 +5,11 @@
 - Apache 2.4.5 or later (2.4.9 or later recommended) ([docs][ws tunnel])
 - `mod_proxy` module enabled
 
+## Goals
+
+- Route trafic to through Apache to a Web Socket server with reverse proxy
+- Terminate TLS connection on Apache, so no additional configuration required on the web socket server
+
 ## Configuration
 
 - enable `mod_proxy_wstunnel` module

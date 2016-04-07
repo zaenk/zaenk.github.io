@@ -14,13 +14,13 @@
 
 - enable `mod_proxy_wstunnel` module
 
-```
+```apacheconf
 LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
 ```
 
 - Configure virtual host
 
-```
+```apacheconf
 # Optional: redirects all non TLS request to secure ports
 <VirtualHost example.com:80>
     ServerName example.com
@@ -44,6 +44,31 @@ LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
         SSLRequireSSL
     </Location>
 </VirtualHost>
+```
+
+## Additional notes
+
+### Ratchet users
+
+I used the following code to start the Rachet server:
+
+```php
+<?php
+
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+use MyApp\MyServer;
+
+
+require __DIR__ . '/vendor/autoload.php';
+
+$server = IoServer::factory(
+    new HttpServer(new WsServer(new MyServer())),
+    8989
+);
+
+$server->run();
 ```
 
 [ws tunnel]: https://httpd.apache.org/docs/2.4/mod/mod_proxy_wstunnel.html
